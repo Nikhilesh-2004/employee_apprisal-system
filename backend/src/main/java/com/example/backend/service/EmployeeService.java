@@ -14,7 +14,7 @@ public class EmployeeService {
     private UserRepository userRepository;
 
     public List<User> getAllEmployees() {
-        return userRepository.findByRole("EMPLOYEE");
+        return userRepository.findByRole(User.Role.EMPLOYEE);
     }
 
     public List<User> getEmployeesByManager(Long managerId) {
@@ -22,7 +22,7 @@ public class EmployeeService {
     }
 
     public User createEmployee(User user) {
-        user.setRole("EMPLOYEE");
+        user.setRole(User.Role.EMPLOYEE);
         return userRepository.save(user);
     }
 
@@ -33,7 +33,7 @@ public class EmployeeService {
             u.setDepartment(updatedUser.getDepartment());
             u.setDesignation(updatedUser.getDesignation());
             u.setJoiningDate(updatedUser.getJoiningDate());
-            u.setManagerId(updatedUser.getManagerId());
+            u.setManager(updatedUser.getManager());
             return userRepository.save(u);
         }).orElseThrow(() -> new RuntimeException("Employee not found"));
     }

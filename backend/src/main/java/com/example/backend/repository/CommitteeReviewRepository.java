@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface CommitteeReviewRepository extends JpaRepository<CommitteeReview, Long> {
-    Optional<CommitteeReview> findByEmployeeIdAndAppraisalCycleId(Long employeeId, Long appraisalCycleId);
+    Optional<CommitteeReview> findByEmployeeIdAndCycleId(Long employeeId, Long cycleId);
 }

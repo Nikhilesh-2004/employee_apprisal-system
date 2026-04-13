@@ -1,10 +1,10 @@
 package com.example.backend.config;
 
 import com.example.backend.model.AppraisalCycle;
-import com.example.backend.model.PerformanceKpi;
+import com.example.backend.model.PerformanceKPI;
 import com.example.backend.model.User;
 import com.example.backend.repository.AppraisalCycleRepository;
-import com.example.backend.repository.PerformanceKpiRepository;
+import com.example.backend.repository.PerformanceKPIRepository;
 import com.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,17 +22,25 @@ public class DataSeeder implements CommandLineRunner {
     private AppraisalCycleRepository cycleRepository;
 
     @Autowired
-    private PerformanceKpiRepository kpiRepository;
+    private PerformanceKPIRepository kpiRepository;
 
     @Override
     public void run(String... args) throws Exception {
         if (userRepository.count() == 0) {
+            // Create Manager
+            User manager = new User();
+            manager.setName("Manager User");
+            manager.setEmail("manager@test.com");
+            manager.setPassword("password");
+            manager.setRole(User.Role.MANAGER);
+            userRepository.save(manager);
+
             // Create Admin
             User admin = new User();
             admin.setName("Admin User");
             admin.setEmail("admin@test.com");
             admin.setPassword("password");
-            admin.setRole("ADMIN");
+            admin.setRole(User.Role.ADMIN);
             userRepository.save(admin);
 
             // Create HR
@@ -40,56 +48,64 @@ public class DataSeeder implements CommandLineRunner {
             hr.setName("HR Manager");
             hr.setEmail("hr@test.com");
             hr.setPassword("password");
-            hr.setRole("HR_MANAGER");
+            hr.setRole(User.Role.HR_MANAGER);
             userRepository.save(hr);
-
-            // Create Manager
-            User manager = new User();
-            manager.setName("Manager User");
-            manager.setEmail("manager@test.com");
-            manager.setPassword("password");
-            manager.setRole("MANAGER");
-            userRepository.save(manager);
             
             // Create Review Committee
             User committee = new User();
             committee.setName("Committee User");
             committee.setEmail("committee@test.com");
             committee.setPassword("password");
-            committee.setRole("REVIEW_COMMITTEE");
+            committee.setRole(User.Role.REVIEW_COMMITTEE);
             userRepository.save(committee);
 
             // Create Employee
-            User emp = new User();
-            emp.setName("Employee User");
-            emp.setEmail("emp@test.com");
-            emp.setPassword("password");
-            emp.setRole("EMPLOYEE");
-            emp.setManagerId(manager.getId());
-            userRepository.save(emp);
+            User emp1 = new User();
+            emp1.setName("Employee One");
+            emp1.setEmail("emp1@test.com");
+            emp1.setPassword("password");
+            emp1.setRole(User.Role.EMPLOYEE);
+            emp1.setManager(manager);
+            emp1.setDesignation("Software Engineer");
+            userRepository.save(emp1);
+
+            User emp2 = new User();
+            emp2.setName("Employee Two");
+            emp2.setEmail("emp2@test.com");
+            emp2.setPassword("password");
+            emp2.setRole(User.Role.EMPLOYEE);
+            emp2.setManager(manager);
+            emp2.setDesignation("QA Engineer");
+            userRepository.save(emp2);
 
             // Create Appraisal Cycle
             AppraisalCycle cycle = new AppraisalCycle();
-            cycle.setCycleName("Q1 2026 Appraisal");
+            cycle.setCycleName("Annual Appraisal 2026");
             cycle.setStartDate(LocalDate.now());
-            cycle.setEndDate(LocalDate.now().plusMonths(1));
-            cycle.setStatus("ACTIVE");
+            cycle.setEndDate(LocalDate.now().plusMonths(3));
+            cycle.setStatus(AppraisalCycle.Status.ACTIVE);
             cycleRepository.save(cycle);
 
-            // Create KPIs
-            PerformanceKpi kpi1 = new PerformanceKpi();
-            kpi1.setKpiName("Code Quality");
-            kpi1.setCategory("Technical");
-            kpi1.setWeightage(40.0);
+            // Create KPIs with exact Enum matching
+            PerformanceKPI kpi1 = new PerformanceKPI();
+            kpi1.setKpiName("Technical Proficiency");
+            kpi1.setCategory(PerformanceKPI.Category.TECHNICAL);
+            kpi1.setWeightage(50);
             kpiRepository.save(kpi1);
 
-            PerformanceKpi kpi2 = new PerformanceKpi();
-            kpi2.setKpiName("Communication");
-            kpi2.setCategory("Soft Skills");
-            kpi2.setWeightage(30.0);
+            PerformanceKPI kpi2 = new PerformanceKPI();
+            kpi2.setKpiName("Team Collaboration");
+            kpi2.setCategory(PerformanceKPI.Category.SOFT_SKILL);
+            kpi2.setWeightage(30);
             kpiRepository.save(kpi2);
+
+            PerformanceKPI kpi3 = new PerformanceKPI();
+            kpi3.setKpiName("Leadership");
+            kpi3.setCategory(PerformanceKPI.Category.MANAGERIAL);
+            kpi3.setWeightage(20);
+            kpiRepository.save(kpi3);
             
-            System.out.println("Mock Data Seeded Successfully!");
+            System.out.println("Enhanced Mock Data Seeded Successfully!");
         }
     }
 }
